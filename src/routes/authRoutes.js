@@ -9,7 +9,7 @@ const { AUTHORIZATION_URL } = process.env;
 router.get("/test", testAPI);
 router.get("/redirect_uri", authController);
 router.get("/", (req, res) => {
-  console.log(AUTHORIZATION_URL);
+  // console.log(AUTHORIZATION_URL);
   res.render("login", {
     title: "Login Page",
     authorization_url: AUTHORIZATION_URL,

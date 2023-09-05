@@ -9,6 +9,9 @@ const { NOTION_API_BASE_URL, OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET } =
 exports.testAPI = async (req, res) => {
   console.log(OAUTH_CLIENT_SECRET);
   console.log(OAUTH_CLIENT_ID);
+  console.log(localStorage.getItem("bot_id"));
+
+  res.json({ message: "success" });
 };
 
 exports.authController = async (req, res) => {
@@ -61,7 +64,9 @@ exports.authController = async (req, res) => {
     });
     await auth.save();
 
+    console.log(body.bot_id);
     localStorage.setItem("bot_id", body.bot_id);
+    console.log(localStorage.getItem("bot_id"));
 
     res.send({
       access_token: body.access_token,

@@ -15,7 +15,7 @@ exports.testAPI = async (req, res) => {
 };
 
 exports.authController = async (req, res) => {
-  console.log("redirectUriController");
+  // console.log("redirectUriController");
   const code = req.query.code;
   // console.log(code);
 

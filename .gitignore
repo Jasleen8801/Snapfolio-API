@@ -130,3 +130,4 @@ dist
 .pnp.*
 
 gcloud_credentials.json
+*.png

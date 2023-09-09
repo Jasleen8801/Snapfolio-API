@@ -27,6 +27,8 @@ SnapFolio is a VS Code extension that allows you to write the documentation of y
     PORT=3000
     GCLOUD_PROJECT_ID=<your-gcloud-project-id>
     BUCKET_NAME=<your-bucket-name>
+    CARBON_URL="https://carbon.now.sh/"
+    CARBON_IMG_SELECTOR="#export-container  .container-bg"
     ```
 
 3. Install dependencies

@@ -12,7 +12,6 @@ const InitiateMongoServer = require("./config/db");
 InitiateMongoServer();
 
 app.use(bodyParser.json());
-app.use(express.static("public"));
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });

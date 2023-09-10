@@ -27,8 +27,7 @@ SnapFolio is a VS Code extension that allows you to write the documentation of y
     PORT=3000
     GCLOUD_PROJECT_ID=<your-gcloud-project-id>
     BUCKET_NAME=<your-bucket-name>
-    CARBON_URL="https://carbon.now.sh/"
-    CARBON_IMG_SELECTOR="#export-container  .container-bg"
+    GITHUB_ACCESS_TOKEN=<your-github-access-token>
     ```
 
 3. Install dependencies
@@ -55,6 +54,13 @@ SnapFolio is a VS Code extension that allows you to write the documentation of y
     - Create a Notion integration and keep it public
     - Setup the template page and it to the integration
     - Setup the authorization URL and other variables in the `.env` file
+
+7. Setup Github
+
+    - Create a Github Account if you don't have one
+    - Generate a Personal Access Token by going to Settings > Developer Settings > Personal Access Tokens
+    - Give it atleast "gist" scope
+    - Copy and paste the token in the `.env` file
 
 ## Run the API
 
@@ -93,6 +99,3 @@ npm start
 
     This endpoint is used to beautify the code snippet, create its image and store it in google cloud bucket.
 
-
-## FOR DEVELOPERS
-Agar madad karni hai, toh todo mein jaake dekh lo.

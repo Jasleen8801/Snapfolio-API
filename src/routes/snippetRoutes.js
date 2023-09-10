@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const { beautifyController } = require("../controllers/snippetController");
+const { codeController, outputController } = require("../controllers/snippetController");
 
-router.post("/beautify", beautifyController);
+router.post("/code", codeController);
+router.post("/output", outputController);
 
 module.exports = router;

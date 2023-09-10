@@ -15,7 +15,7 @@ const keyFilePath = path.join(__dirname, "../../gcloud_credentials.json");
 const cacheFolderPath = path.join(__dirname, "cache");
 
 if (!fs.existsSync(cacheFolderPath)) {
-  fs.mkdirSync(cacheFolderPath); 
+  fs.mkdirSync(cacheFolderPath);
 }
 
 const storage = new Storage({
@@ -23,41 +23,76 @@ const storage = new Storage({
   keyFilename: keyFilePath,
 });
 
-exports.beautifyController = async (req, res) => {
+async function captureAndUploadScreenshot(
+  code,
+  type,
+  theme,
+  fontSize,
+  backgroundColor,
+  res
+) {
   try {
-    const code = 'console.log("Hell Yeah this worksssss!");';
-    const language = "javascript";
-    const theme = "seti";
-    const fontSize = 14;
-    const backgroundColor = "#282c34";
+    if (!code) {
+      return res
+        .status(400)
+        .json({ error: "Code is required in the request body." });
+    }
 
     const gistFiles = {
-      'example.js': {
+      "code.js": {
         content: code,
       },
     };
-    
     const gistId = await createGithubGist(gistFiles);
-    const carbonUrl = generateCarbonUrl(gistId, language, theme, fontSize, backgroundColor);
+
+    const carbonUrl = generateCarbonUrl(
+      gistId,
+      type,
+      theme,
+      fontSize,
+      backgroundColor
+    );
 
     const filename = `${uuidv4()}.png`;
     const tempFilePath = path.join(cacheFolderPath, filename);
+
     await captureScreenshot(carbonUrl, tempFilePath);
-    const remoteFilePath = `code_images/${filename}`; 
+
+    const remoteFilePath = `${type}_images/${filename}`;
 
     const uploadOptions = {
       destination: remoteFilePath,
       contentType: "image/png",
     };
-
     await storage.bucket(BUCKET_NAME).upload(tempFilePath, uploadOptions);
 
-    const gcsUri = `https://storage.cloud.google.com/${BUCKET_NAME}/code_images/${remoteFilePath}`;
-    console.log(gcsUri);
+    const gcsUri = `https://storage.googleapis.com/${BUCKET_NAME}/${remoteFilePath}`;
+
     res.json({ image_url: gcsUri, message: "success" });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({ error: "An error occurred." });
   }
+}
+
+exports.codeController = async (req, res) => {
+  await captureAndUploadScreenshot(
+    req.body.code,
+    "code",
+    req.body.theme || "seti",
+    req.body.fontSize || 14,
+    req.body.backgroundColor || "#282c34",
+    res
+  );
 };
 
+exports.outputController = async (req, res) => {
+  await captureAndUploadScreenshot(
+    req.body.code,
+    "output",
+    req.body.theme || "seti",
+    req.body.fontSize || 14,
+    req.body.backgroundColor || "#282c34",
+    res
+  );
+};

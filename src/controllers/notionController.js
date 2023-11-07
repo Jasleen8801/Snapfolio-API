@@ -26,6 +26,9 @@ const getNotionClient = async () => {
 exports.retrieveABlockController = async (req, res) => {
   try {
     const notion = await getNotionClient();
+    const auth = await AuthSchema.findOne({
+      bot_id: "89bdb28a-4b5e-4a86-af84-1c5801840a56",
+    });
     const template_id = auth.duplicated_template_id; // Fetch template_id as needed
 
     if (await BlockSchema.findOne({ page_id: template_id })) {
@@ -57,6 +60,9 @@ exports.retrieveABlockController = async (req, res) => {
 exports.updateABlockController = async (req, res) => {
   try {
     const notion = await getNotionClient();
+    const auth = await AuthSchema.findOne({
+      bot_id: "89bdb28a-4b5e-4a86-af84-1c5801840a56",
+    });
     const template_id = auth.duplicated_template_id; // Fetch template_id as needed
 
     const block = await BlockSchema.findOne({ page_id: template_id });
@@ -65,12 +71,12 @@ exports.updateABlockController = async (req, res) => {
     const block_id = block_ids[0];
     const content = "You're hacked! :D ";
     const content1 =
-      "This is not a drill! Remember to change your credentials! I repeat, this is not a drill!";
+      "FUCKKKKK OFFFFFFFFFFFFFFFFFFFFFFFFFFFFF";
 
     const response = await notion.blocks.update({
       block_id: block_id,
       paragraph: {
-        text: [
+        rich_text: [
           {
             type: "text",
             text: {
@@ -94,7 +100,7 @@ exports.updateABlockController = async (req, res) => {
         ],
       },
     });
-    // console.log(response);
+    console.log(response);
 
     res.send({ message: "Successfully updated the data" });
   } catch (error) {
@@ -102,6 +108,18 @@ exports.updateABlockController = async (req, res) => {
     res.status(500).json({ error: "An error occurred." });
   }
 };
+
+/*Request:{
+  "code": "", // formatted
+  "output": ""
+} 
+
+Settings:{
+  "theme":
+  "fontSize":
+  "background"
+}
+*/
 
 exports.appendABlockController = async (req, res) => {
   try {
@@ -205,6 +223,9 @@ exports.appendABlockController = async (req, res) => {
 exports.retrievePagePropertiesController = async (req, res) => {
   try {
     const notion = await getNotionClient();
+    const auth = await AuthSchema.findOne({
+      bot_id: "89bdb28a-4b5e-4a86-af84-1c5801840a56",
+    });
     const template_id = auth.duplicated_template_id; // Fetch template_id as needed
 
     const response = await notion.pages.retrieve({
@@ -212,7 +233,6 @@ exports.retrievePagePropertiesController = async (req, res) => {
     });
 
     const title = response.properties.title.title;
-    // console.log(title);
     res.send({ message: "Successfully fetched the data" });
   } catch (error) {
     console.error("Error in retrievePagePropertiesController:", error.message);

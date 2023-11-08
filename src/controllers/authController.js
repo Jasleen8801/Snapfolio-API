@@ -54,17 +54,16 @@ exports.authController = async (req, res) => {
     //   return;
     // }
 
-    // FIXME: This is not workings
-    // const auth = new AuthSchema({
-    //   access_token: body.access_token,
-    //   token_type: body.token_type,
-    //   bot_id: body.bot_id,
-    //   workspace_name: body.workspace_name,
-    //   workspace_id: body.workspace_id,
-    //   user_id: body.owner.user.id,
-    //   duplicated_template_id: body.duplicated_template_id,
-    // });
-    // await auth.save();
+    const auth = new AuthSchema({
+      access_token: body.access_token,
+      token_type: body.token_type,
+      bot_id: body.bot_id,
+      workspace_name: body.workspace_name,
+      workspace_id: body.workspace_id,
+      user_id: body.owner.user.id,
+      duplicated_template_id: body.duplicated_template_id,
+    });
+    await auth.save();
 
     // console.log(body.bot_id);
     // localStorage.setItem("bot_id", body.bot_id);

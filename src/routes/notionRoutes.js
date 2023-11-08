@@ -6,10 +6,12 @@ const {
   updateABlockController,
   appendABlockController,
   retrievePagePropertiesController,
+  appendTextBlockController,
 } = require("../controllers/notionController");
 
 router.get("/retrieve", retrieveABlockController);
 router.patch("/update", updateABlockController);
+router.post("/appendText", appendTextBlockController); // Main usage
 router.patch("/append", appendABlockController);
 router.get("/properties", retrievePagePropertiesController);
 

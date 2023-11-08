@@ -58,11 +58,88 @@ exports.retrieveABlockController = async (req, res) => {
   }
 };
 
-exports.updateABlockController = async (req, res) => {
+exports.appendTextBlockController = async (req, res) => {
   try {
     const notion = await getNotionClient();
+    const bot_id = req.body.bot_id;
+    console.log(bot_id);
     const auth = await AuthSchema.findOne({
-      bot_id: "89bdb28a-4b5e-4a86-af84-1c5801840a56",
+      bot_id: bot_id,
+    });
+    const template_id = auth.duplicated_template_id; 
+    
+    const block = await BlockSchema.findOne({ page_id: template_id });
+    console.log(block);
+    if(!block) {
+      // when the page is not created
+      const response = await notion.blocks.children.list({
+        block_id: template_id,
+        page_size: 50,
+      });
+      const block_ids = response.results.map((result) => result.id);
+      const page = new BlockSchema({
+        page_id: template_id,
+        block_ids: block_ids,
+      });
+      await page.save();
+    }
+    const block1 = await BlockSchema.findOne({ page_id: template_id });
+    const block_ids = block1.block_ids;
+    const block_id = block_ids[block_ids.length - 1];
+
+    const text = req.body.text;
+    const boldText = req.body.boldText;
+    const response = await notion.blocks.children.append({
+      block_id: block_id,
+      children: [
+        {
+          paragraph: {
+            rich_text: [
+              {
+                type: "text",
+                text: {
+                  content: boldText,
+                },
+                annotations: {
+                  bold: true,
+                  color: "default",
+                },
+              },
+            ],
+          },
+        },
+        {
+          paragraph: {
+            rich_text: [
+              {
+                type: "text",
+                text: {
+                  content: text,
+                },
+                annotations: {
+                  bold: false,
+                  color: "default",
+                },
+              },
+            ],
+          },
+        }
+      ],
+    });
+    // console.log(response);
+    res.send({ message: "Successfully appended the data" });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+exports.updateABlockController = async (req, res) => {
+  // TODO: NO LONGER NEEDED!!!
+  try {
+    const notion = await getNotionClient();
+    const botId = req.body.bot_id;
+    const auth = await AuthSchema.findOne({
+      bot_id: botId,
     });
     const template_id = auth.duplicated_template_id; // Fetch template_id as needed
 

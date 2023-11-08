@@ -10,7 +10,8 @@ const { PORT } = process.env;
 
 const getNotionClient = async () => {
   // const bot_id = localStorage.getItem("bot_id");
-  const bot_id = "89bdb28a-4b5e-4a86-af84-1c5801840a56"; // Fetch bot_id as needed
+  const bot_id = "89bdb28a-4b5e-4a86-af84-1c5801840a56"; 
+  // const bot_id = vscode.workspace.getConfiguration("notion").get("bot_id");
   const auth = await AuthSchema.findOne({ bot_id });
 
   if (!auth) {
@@ -108,18 +109,6 @@ exports.updateABlockController = async (req, res) => {
     res.status(500).json({ error: "An error occurred." });
   }
 };
-
-/*Request:{
-  "code": "", // formatted
-  "output": ""
-} 
-
-Settings:{
-  "theme":
-  "fontSize":
-  "background"
-}
-*/
 
 exports.appendABlockController = async (req, res) => {
   try {

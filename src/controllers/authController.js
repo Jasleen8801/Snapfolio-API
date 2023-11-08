@@ -41,6 +41,7 @@ exports.authController = async (req, res) => {
       }),
     });
     const body = await response.json();
+    console.log(body);
     // console.log(body.owner.user);
 
     // if (AuthSchema.findOne({ bot_id: body.bot_id })) {
@@ -53,26 +54,23 @@ exports.authController = async (req, res) => {
     //   return;
     // }
 
-    const auth = new AuthSchema({
-      access_token: body.access_token,
-      token_type: body.token_type,
-      bot_id: body.bot_id,
-      workspace_name: body.workspace_name,
-      workspace_id: body.workspace_id,
-      user_id: body.owner.user.id,
-      duplicated_template_id: body.duplicated_template_id,
-    });
-    await auth.save();
+    // FIXME: This is not workings
+    // const auth = new AuthSchema({
+    //   access_token: body.access_token,
+    //   token_type: body.token_type,
+    //   bot_id: body.bot_id,
+    //   workspace_name: body.workspace_name,
+    //   workspace_id: body.workspace_id,
+    //   user_id: body.owner.user.id,
+    //   duplicated_template_id: body.duplicated_template_id,
+    // });
+    // await auth.save();
 
-    console.log(body.bot_id);
-    localStorage.setItem("bot_id", body.bot_id);
-    console.log(localStorage.getItem("bot_id"));
+    // console.log(body.bot_id);
+    // localStorage.setItem("bot_id", body.bot_id);
+    // console.log(localStorage.getItem("bot_id"));
 
-    res.send({
-      access_token: body.access_token,
-      message: "success",
-      bot_id: body.bot_id,
-    });
+    res.send({'message': 'success', 'bot_id': body.bot_id, status: 200});
   } catch (error) {
     console.log({ error: error.message });
   }

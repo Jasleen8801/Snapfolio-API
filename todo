@@ -1,3 +1,18 @@
 - VS Code Extension Integration with API
 - VS Code preview in webviews
 - Currently only working for template pages, need to make it work for any page
+
+
+
+
+/*Request:{
+  "code": "", // formatted
+  "output": ""
+} 
+
+Settings:{
+  "theme":
+  "fontSize":
+  "background"
+}
+*/

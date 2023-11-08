@@ -47,7 +47,7 @@ async function captureAndUploadScreenshot(
 
     const carbonUrl = generateCarbonUrl(
       gistId,
-      type,
+      "auto",
       theme,
       fontSize,
       backgroundColor

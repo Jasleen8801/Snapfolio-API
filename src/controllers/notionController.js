@@ -62,14 +62,14 @@ exports.appendTextBlockController = async (req, res) => {
   try {
     const notion = await getNotionClient();
     const bot_id = req.body.bot_id;
-    console.log(bot_id);
+    // console.log(bot_id);
     const auth = await AuthSchema.findOne({
       bot_id: bot_id,
     });
     const template_id = auth.duplicated_template_id; 
     
     const block = await BlockSchema.findOne({ page_id: template_id });
-    console.log(block);
+    // console.log(block);
     if(!block) {
       // when the page is not created
       const response = await notion.blocks.children.list({
@@ -187,37 +187,122 @@ exports.updateABlockController = async (req, res) => {
   }
 };
 
-exports.appendABlockController = async (req, res) => {
+exports.appendCodeController = async (req, res) => {
   try {
     const notion = await getNotionClient();
+    const bot_id = req.body.bot_id;
+    const flag = req.body.flag; // if flag=true, then add output too, else add only code
+    const code = req.body.code;
+    console.log(code);
+    const subheading = req.body.subheading || 'Problem';
+    const description = req.body.description || 'Description';
+    const output = req.body.output || null;
+    const theme = req.body.theme || "material";
+    const fontSize = req.body.fontSize || 12;
+    const backgroundColor = req.body.backgroundColor || "#282a36";
+
     const auth = await AuthSchema.findOne({
-      bot_id: "89bdb28a-4b5e-4a86-af84-1c5801840a56",
+      bot_id: bot_id,
     });
     const template_id = auth.duplicated_template_id;
 
     const block = await BlockSchema.findOne({ page_id: template_id });
-    const block_ids = block.block_ids;
+    if(!block) {
+      // when the page is not created
+      const response = await notion.blocks.children.list({
+        block_id: template_id,
+        page_size: 50,
+      });
+      const block_ids = response.results.map((result) => result.id);
+      const page = new BlockSchema({
+        page_id: template_id,
+        block_ids: block_ids,
+      });
+      await page.save();
+    }
+    const block1 = await BlockSchema.findOne({ page_id: template_id });
+    const block_ids = block1.block_ids;
     const block_id = block_ids[block_ids.length - 1];
 
     const code_endpoint = `http://localhost:${PORT}/snippet/code`;
-    const output_endpoint = `http://localhost:${PORT}/snippet/output`;
-
-    const temp1 = await axios.post(code_endpoint, {
-      code: '#include <iostream>\nusing namespace std;\nint main() {\n\tcout << "Hello World!";\n\treturn 0;\n}',
-      theme: "material",
-      fontSize: 12,
-      backgroundColor: "#282a36",
+    const codeRes = await axios.post(code_endpoint, {
+      code: code,
+      theme: theme,
+      fontSize: fontSize,
+      backgroundColor: backgroundColor,
     });
-    // console.log(temp1.data);
-    const code_url = temp1.data.image_url;
+    const code_url = codeRes.data.image_url;
 
-    const temp2 = await axios.post(output_endpoint, {
-      code: "[nodemon] restarting due to changes...\n[nodemon] starting `node src/app.js`\nApp listening at 3000\n Connected to DB !!",
-      theme: "material",
-      fontSize: 12,
-      backgroundColor: "#282a36",
-    });
-    const output_url = temp2.data.image_url;
+    if(flag){
+      const output_endpoint = `http://localhost:${PORT}/snippet/output`;
+      const outputRes = await axios.post(output_endpoint, {
+        code: output,
+        theme: theme,
+        fontSize: fontSize,
+        backgroundColor: backgroundColor,
+      });
+      const output_url = outputRes.data.image_url;  
+      const response = await notion.blocks.children.append({
+        block_id: block_id,
+        children: [
+          {
+            heading_2: {
+              rich_text: [
+                {
+                  text: {
+                    content: subheading,
+                  },
+                },
+              ],
+            },
+          },
+          {
+            paragraph: {
+              rich_text: [
+                {
+                  text: {
+                    content: description,
+                  },
+                },
+              ],
+            },
+          },
+          {
+            object: "block",
+            type: "image",
+            image: {
+              type: "external",
+              external: {
+                url: code_url,
+              },
+            },
+          },
+          {
+            paragraph: {
+              rich_text: [
+                {
+                  text: {
+                    content: "Output is:",
+                  },
+                },
+              ],
+            },
+          },
+          {
+            object: "block",
+            type: "image",
+            image: {
+              type: "external",
+              external: {
+                url: output_url,
+              },
+            },
+          },
+        ],
+      });
+      res.send({ message: "Successfully appended the data" });
+      return;
+    }
 
     const response = await notion.blocks.children.append({
       block_id: block_id,
@@ -251,27 +336,6 @@ exports.appendABlockController = async (req, res) => {
             type: "external",
             external: {
               url: code_url,
-            },
-          },
-        },
-        {
-          paragraph: {
-            rich_text: [
-              {
-                text: {
-                  content: "Sample Output:",
-                },
-              },
-            ],
-          },
-        },
-        {
-          object: "block",
-          type: "image",
-          image: {
-            type: "external",
-            external: {
-              url: output_url,
             },
           },
         },

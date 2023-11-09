@@ -192,8 +192,9 @@ exports.appendCodeController = async (req, res) => {
     const notion = await getNotionClient();
     const bot_id = req.body.bot_id;
     const flag = req.body.flag; // if flag=true, then add output too, else add only code
-    const code = req.body.code;
+    let code = req.body.code;
     console.log(code);
+    // code = "#include<iostream>\nusing namespace std;\nint main(){\n\tcout<<\"Hello World\";\n\treturn 0;\n}";
     const subheading = req.body.subheading || 'Problem';
     const description = req.body.description || 'Description';
     const output = req.body.output || null;
@@ -312,7 +313,7 @@ exports.appendCodeController = async (req, res) => {
             rich_text: [
               {
                 text: {
-                  content: "Problem 1",
+                  content: subheading,
                 },
               },
             ],
@@ -323,7 +324,7 @@ exports.appendCodeController = async (req, res) => {
             rich_text: [
               {
                 text: {
-                  content: "Write a C++ function that prints 'Hello World'.",
+                  content: description,
                 },
               },
             ],

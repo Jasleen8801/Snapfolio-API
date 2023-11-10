@@ -1,5 +1,6 @@
 const AuthSchema = require("../models/auth");
-const localStorage = require("localStorage");
+const ChildSchema = require("../models/child");
+const BlockSchema = require("../models/block");
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -9,7 +10,6 @@ const { NOTION_API_BASE_URL, OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET } =
 exports.testAPI = async (req, res) => {
   console.log(OAUTH_CLIENT_SECRET);
   console.log(OAUTH_CLIENT_ID);
-  console.log(localStorage.getItem("bot_id"));
 
   res.json({ message: "success" });
 };
@@ -65,9 +65,19 @@ exports.authController = async (req, res) => {
     });
     await auth.save();
 
-    // console.log(body.bot_id);
-    // localStorage.setItem("bot_id", body.bot_id);
-    // console.log(localStorage.getItem("bot_id"));
+    const child = new ChildSchema({
+      page_id: body.duplicated_template_id,
+      child_ids: [],
+      bot_id: body.bot_id,
+    });
+    await child.save();
+
+    const block = new BlockSchema({
+      page_id: body.duplicated_template_id,
+      block_ids: [],
+      bot_id: body.bot_id,
+    });
+    await block.save();
 
     res.send({'message': 'success', 'bot_id': body.bot_id, status: 200});
   } catch (error) {

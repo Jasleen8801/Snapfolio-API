@@ -8,8 +8,7 @@ SnapFolio is a VS Code extension that allows you to write the documentation of y
 1. Clone the repo
 
     ```bash
-    git clone https://github.com/Jasleen8801/Notion-api-practice.git
-    cd Notion-api-practice
+    git clone https://github.com/Jasleen8801/Snapfolio-API.git
     ```
 
 2. Setting Envrionment Variables
@@ -71,31 +70,16 @@ npm start
 
 ## API Endpoints
 
-1. `GET /auth`
+1. `GET /notion/getPages`: Retrieve a list of Notion pages. 
+2. `POST /notion/createPage`: Create a new Notion page. 
+3. `GET /notion/retrieve`: Retrieve a block from the Notion page.
+4. `PATCH /notion/update`: Update a block in the Notion page.
+5. `POST /notion/appendText`: Append a text block to the Notion page. 
+6. `POST /notion/appendCode`: Append a code block to the Notion page. 
+7. `GET /notion/properties`: Retrieve properties of the Notion page.
+8. `POST /auth/redirect_uri`: Authenticate the user's Notion account
 
-    This endpoint is used to get to the home page of the API.
+## Main Repository
 
-2. `GET /auth/redirect_uri`
-
-    This endpoint is used to get the authorization code from Notion. It redirects to the Notion authorization page.
-
-3. `GET /notion/retrieve`
-
-    This endpoint is used to retrieve the blocks from the Notion page.
-
-4. `PATCH /notion/update`
-
-    This endpoint is used to update the blocks in the Notion page.
-
-5. `PATCH /notion/append`
-
-    This endpoint is used to append a new block to the Notion page.
-
-6. `GET /notion/properties`
-
-    This endpoint is used to get the properties of the Notion page, including the uri, title and other important information.
-
-7. `POST /snippet/beautify`
-
-    This endpoint is used to beautify the code snippet, create its image and store it in google cloud bucket.
+This is just the backend API of our main extension. To view the main repository, click [here](https://github.com/Jasleen8801/snapfolio). Be sure to star the repo if you like it!
 

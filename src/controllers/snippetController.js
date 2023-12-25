@@ -40,7 +40,7 @@ async function captureAndUploadScreenshot(
 
     const gistFiles = {
       "code.js": {
-        content: code,
+        content: code,  
       },
     };
     const gistId = await createGithubGist(gistFiles);

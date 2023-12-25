@@ -96,7 +96,7 @@ exports.appendCodeController = async (req, res) => {
     const page_id = req.body.page_id;
     // console.log(page_id);
 
-    const code_endpoint = `http://localhost:${PORT}/snippet/code`;
+    const code_endpoint = `https://app-pvtat5vj4a-uc.a.run.app/snippet/code`;
     const codeRes = await axios.post(code_endpoint, {
       code: code,
       theme: theme,
@@ -106,7 +106,7 @@ exports.appendCodeController = async (req, res) => {
     const code_url = codeRes.data.image_url;
 
     if (flag) {
-      const output_endpoint = `http://localhost:${PORT}/snippet/output`;
+      const output_endpoint = `https://app-pvtat5vj4a-uc.a.run.app/snippet/output`;
       const outputRes = await axios.post(output_endpoint, {
         code: output,
         theme: theme,

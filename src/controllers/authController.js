@@ -24,7 +24,7 @@ exports.authController = async (req, res) => {
   ).toString("base64");
   // console.log(encoded);
 
-  const redirect_uri = "http://localhost:3000/auth/redirect_uri";
+  const redirect_uri = "https://app-pvtat5vj4a-uc.a.run.app/auth/redirect_uri";
 
   try {
     const response = await fetch(`${NOTION_API_BASE_URL}/oauth/token`, {

@@ -3,6 +3,11 @@ const puppeteer = require("puppeteer");
 async function captureScreenshot(url, outputPath) {
   const browser = await puppeteer.launch({
     headless: "new",
+    executablePath: "/usr/bin/chromium-browser",
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+    ],
   });
   const page = await browser.newPage();
   await page.goto(url);
